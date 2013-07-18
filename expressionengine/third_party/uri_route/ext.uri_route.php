@@ -5,7 +5,6 @@
  * @copyright Copyright (c) 2013 FDCore Studio <http://fdcore.com>
  *
 */
-
 class Uri_route_ext {
 
     var $name		    = '';
@@ -22,11 +21,11 @@ class Uri_route_ext {
      */
     function __construct($settings='')
     {
-        $this->EE =& get_instance();
 
-        $this->EE->lang->loadfile('uri_route');
+        ee()->lang->loadfile('uri_route');
 
         $this->name = lang('uri_route_module_name');
+        
         $this->description = lang('uri_route_module_description');
 
         $this->settings = $settings;
@@ -47,7 +46,7 @@ class Uri_route_ext {
             'enabled'	=> 'y'
         );
 
-        $this->EE->db->insert('extensions', $data);
+        ee()->db->insert('extensions', $data);
     }
 
     function switch_template($uri_string)
@@ -64,7 +63,7 @@ class Uri_route_ext {
         if ($uri_string != '' && $uri_string != '/') {
 
 
-            $query = $this->EE->db->get_where('exp_uri_route', array('site_id' => $this->EE->config->item('site_id'), 'enable' => 'on'));
+            $query = ee()->db->get_where('exp_uri_route', array('site_id' => ee()->config->item('site_id'), 'enable' => 'on'));
 
             if ($query->num_rows() > 0) {
 
@@ -96,13 +95,13 @@ class Uri_route_ext {
                             $new_uri_string = preg_replace($rule['template_rules'], $rule['template_replace'], $uri_string);
                         }
 
-                        if (in_array( $this->EE->session->userdata['group_id'], $rule['group_id'])) {
+                        if (in_array( ee()->session->userdata['group_id'], $rule['group_id'])) {
 
                             $new_uri_string = preg_replace($rule['template_rules'], $rule['template_replace'], $uri_string);
                             break;
                         }
 
-                        if (count($rule['member_id']) > 0 && $rule['member_id'][0] != 0 && in_array($this->EE->session->userdata['member_id'], $rule['member_id'])) {
+                        if (count($rule['member_id']) > 0 && $rule['member_id'][0] != 0 && in_array(ee()->session->userdata['member_id'], $rule['member_id'])) {
                             $new_uri_string = preg_replace($rule['template_rules'], $rule['template_replace'], $uri_string);
                             break;
                         }
@@ -114,7 +113,7 @@ class Uri_route_ext {
                 if ($new_uri_string != '') {
 
                     if(intval($rule['redirect']) > 0){
-                        $this->EE->load->helper('url');
+                        ee()->load->helper('url');
                         redirect($new_uri_string, 'location', intval($rule['redirect']));
                         exit();
                     }
@@ -129,9 +128,9 @@ class Uri_route_ext {
                     }
 
                     if ($win_rule['replace_uri'] == 'y') {
-                        $this->EE->uri->uri_string = $new_uri_string;
-                        if(isset($segs[0])) $this->EE->uri->segments[1] = $segs[0];
-                        if(isset($segs[1])) $this->EE->uri->segments[2] = $segs[1];
+                        ee()->uri->uri_string = $new_uri_string;
+                        if(isset($segs[0])) ee()->uri->segments[1] = $segs[0];
+                        if(isset($segs[1])) ee()->uri->segments[2] = $segs[1];
                     }
 
                     print ee()->config->item('template');
@@ -156,8 +155,8 @@ class Uri_route_ext {
      */
     function disable_extension()
     {
-        $this->EE->db->where('class', __CLASS__);
-        $this->EE->db->delete('extensions');
+        ee()->db->where('class', __CLASS__);
+        ee()->db->delete('extensions');
     }
 
 }

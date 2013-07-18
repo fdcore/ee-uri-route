@@ -15,25 +15,24 @@ class Uri_route_mcp {
         $this->mod_name = 'uri_route';
         $this->root_url = BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module='.$this->mod_name;
 
-		$this->EE->cp->set_breadcrumb($this->root_url,$this->EE->lang->line('uri_route_module_name'));
+		ee()->cp->set_breadcrumb($this->root_url,ee()->lang->line('uri_route_module_name'));
 		
 	}
 
     function index(){
 
-
         $this->_get_member_groups();
 
-        $this->EE->load->library('table');
+        ee()->load->library('table');
 
-        $this->EE->cp->set_right_nav(array(
+        ee()->cp->set_right_nav(array(
             'create_rule'	=> BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'
             .AMP.'module='.$this->mod_name.AMP.'method=create'
         ));
 
-		$this->EE->cp->set_variable('cp_page_title', $this->EE->lang->line('uri_route_module_name'));
+		ee()->view->cp_page_title = ee()->lang->line('uri_route_module_name');
 		
-		$query = $this->EE->db->query("SELECT * FROM exp_uri_route WHERE site_id = ?", $this->EE->config->item('site_id'));
+		$query = ee()->db->query("SELECT * FROM exp_uri_route WHERE site_id = ?", ee()->config->item('site_id'));
 				
 		if ($query->num_rows() > 0)
 		{
@@ -44,12 +43,12 @@ class Uri_route_mcp {
 			}
 		}
 		
-		return $this->EE->load->view('index', $this->vars, TRUE);
+		return ee()->load->view('index', $this->vars, TRUE);
 	}
 	
 	function get_tpl_id($group,$template){
 		
-		$query = $this->EE->db->query("SELECT t.template_id, g.group_name, t.template_name
+		$query = ee()->db->query("SELECT t.template_id, g.group_name, t.template_name
 		FROM exp_templates AS t, exp_template_groups AS g
 		WHERE t.template_name =  ?
 		AND g.group_name =  ?
@@ -67,27 +66,28 @@ class Uri_route_mcp {
 	}
 	function create(){
 				
-		$this->EE->cp->set_variable('cp_page_title', $this->EE->lang->line('create_rule_title'));
+		ee()->view->cp_page_title = ee()->lang->line('create_rule_title');
+
 		$this->_get_member_groups();
 
-        $this->EE->cp->set_right_nav(array('rules_list'	=> $this->root_url));
+        ee()->cp->set_right_nav(array('rules_list'	=> $this->root_url));
 
 		/*
 			POST Fields
 		*/
-		$name 				= $this->EE->input->post('name', true);
-		$username 			= $this->EE->input->post('username');
-		$group_id 			= $this->EE->input->post('group_id');
-		$template_rules 	= $this->EE->input->post('template_rules');					
-		$template_replace   = $this->EE->input->post('template_replace');
-		$replace_uri 		= $this->EE->input->post('replace_uri');
-        $enable_rule 		= $this->EE->input->post('enable');
+		$name 				= ee()->input->post('name', true);
+		$username 			= ee()->input->post('username');
+		$group_id 			= ee()->input->post('group_id');
+		$template_rules 	= ee()->input->post('template_rules');					
+		$template_replace   = ee()->input->post('template_replace');
+		$replace_uri 		= ee()->input->post('replace_uri');
+        $enable_rule 		= ee()->input->post('enable');
 
-        $start_date 		= $this->EE->input->post('start_date');
-        $end_date 		    = $this->EE->input->post('end_date');
-        $redirect_type 		= $this->EE->input->post('redirect_type');
-        $redirect 		    = $this->EE->input->post('redirect');
-        $start_end_date 		= $this->EE->input->post('start_end_date');
+        $start_date 		= ee()->input->post('start_date');
+        $end_date 		    = ee()->input->post('end_date');
+        $redirect_type 		= ee()->input->post('redirect_type');
+        $redirect 		    = ee()->input->post('redirect');
+        $start_end_date 		= ee()->input->post('start_end_date');
 
 		if(count($_POST)  > 0){
 			
@@ -95,21 +95,21 @@ class Uri_route_mcp {
 			
 			try {
 				
-				if(!$name) throw new Exception($this->EE->lang->line('error_setname'));
+				if(!$name) throw new Exception(ee()->lang->line('error_setname'));
 				
 				$insert['name'] = $name;
 				
 				if($replace_uri == 'y') $insert['replace_uri'] = 'y'; else $insert['replace_uri'] = 'n';
                 if($enable_rule == 'on') $insert['enable'] = 'on'; else $insert['enable'] = 'off';
 
-				$insert['site_id'] = $this->EE->config->item('site_id');
+				$insert['site_id'] = ee()->config->item('site_id');
 				
 				if($username && $username!==''){
 					
-					$query = $this->EE->db->get_where('exp_members', array('username' => $username));
+					$query = ee()->db->get_where('exp_members', array('username' => $username));
 					
 					if ($query->num_rows() != 1)
-                        throw new Exception($this->EE->lang->line('error_setuser'));
+                        throw new Exception(ee()->lang->line('error_setuser'));
 
 					$row = $query->row();
 					$insert['member_id'] =$row->member_id;
@@ -152,62 +152,63 @@ class Uri_route_mcp {
 
                     error_reporting($old_error);
 
-                    $this->EE->db->insert('exp_uri_route', $insert);
+                    ee()->db->insert('exp_uri_route', $insert);
 
-                    $this->EE->session->set_flashdata('message_success', $this->EE->lang->line('succeful_add'));
+                    ee()->session->set_flashdata('message_success', ee()->lang->line('succeful_add'));
 
-                    $this->EE->functions->redirect($this->root_url);
+                    ee()->functions->redirect($this->root_url);
                 }
 
 
 				
 			} catch (Exception $e) {
 				
-				$this->EE->session->set_flashdata('message_failure', $e->getMessage());
-				$this->EE->functions->redirect($this->root_url.AMP.'method=create');
+				ee()->session->set_flashdata('message_failure', $e->getMessage());
+				ee()->functions->redirect($this->root_url.AMP.'method=create');
 			}			
 			
 			
 		}
 					
-		return $this->EE->load->view('create', $this->vars, TRUE);
+		return ee()->load->view('create', $this->vars, TRUE);
 	}
 	
 
 	function delete(){
-		$rule_id = intval($this->EE->input->get('id', true));
+		
+		$rule_id = intval(ee()->input->get('id', true));
 
 		if($rule_id > 0){
-			$this->EE->session->set_flashdata('message_success', 'Rule deleted');
-			$this->EE->db->delete('exp_uri_route', array('id' => $rule_id));
+			ee()->session->set_flashdata('message_success', 'Rule deleted');
+			ee()->db->delete('exp_uri_route', array('id' => $rule_id));
 		}
 
-		$this->EE->functions->redirect($this->root_url);
+		ee()->functions->redirect($this->root_url);
 	}
 	
 	
 	function edit(){
 		
-		$this->EE->cp->set_variable('cp_page_title', $this->EE->lang->line('edit_rule'));
+		ee()->view->cp_page_title = ee()->lang->line('edit_rule');
 
-        $this->EE->cp->set_right_nav(array(
+        ee()->cp->set_right_nav(array(
             'create_rule' => BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module='.$this->mod_name.AMP.'method=create',
             'rules_list'  => $this->root_url)
         );
 
-		$rule_id = intval($this->EE->input->get('id', true));		
+		$rule_id = intval(ee()->input->get('id', true));		
 		
 		if($rule_id == 0){
-			$this->EE->session->set_flashdata('message_failure', 'Rule not found');
-			$this->EE->functions->redirect($this->root_url);
+			ee()->session->set_flashdata('message_failure', 'Rule not found');
+			ee()->functions->redirect($this->root_url);
 		}
 		
-		$query = $this->EE->db->get_where('exp_uri_route', array('site_id' => $this->EE->config->item('site_id'), 'id' => $rule_id), 1);
+		$query = ee()->db->get_where('exp_uri_route', array('site_id' => ee()->config->item('site_id'), 'id' => $rule_id), 1);
 		
 		if ($query->num_rows() == 0){
 			
-			$this->EE->session->set_flashdata('message_failure', 'Rule not found');
-			$this->EE->functions->redirect($this->root_url);
+			ee()->session->set_flashdata('message_failure', 'Rule not found');
+			ee()->functions->redirect($this->root_url);
 		}
 		
 		$rule_row = $query->row_array();
@@ -216,20 +217,20 @@ class Uri_route_mcp {
 		/*
 			POST Fields
 		*/
-		$name 				= $this->EE->input->post('name', true);
-		$username 			= $this->EE->input->post('username');
-		$group_id 			= $this->EE->input->post('group_id');
+		$name 				= ee()->input->post('name', true);
+		$username 			= ee()->input->post('username');
+		$group_id 			= ee()->input->post('group_id');
 
-		$template_rules 	= $this->EE->input->post('template_rules');					
-		$template_replace   = $this->EE->input->post('template_replace');
-		$replace_uri 		= $this->EE->input->post('replace_uri');
-		$enable_rule 		= $this->EE->input->post('enable');
+		$template_rules 	= ee()->input->post('template_rules');					
+		$template_replace   = ee()->input->post('template_replace');
+		$replace_uri 		= ee()->input->post('replace_uri');
+		$enable_rule 		= ee()->input->post('enable');
 
-        $start_date 		= $this->EE->input->post('start_date');
-        $end_date 		    = $this->EE->input->post('end_date');
-        $redirect_type 		= $this->EE->input->post('redirect_type');
-        $redirect 		    = $this->EE->input->post('redirect');
-        $start_end_date 	= $this->EE->input->post('start_end_date');
+        $start_date 		= ee()->input->post('start_date');
+        $end_date 		    = ee()->input->post('end_date');
+        $redirect_type 		= ee()->input->post('redirect_type');
+        $redirect 		    = ee()->input->post('redirect');
+        $start_end_date 	= ee()->input->post('start_end_date');
 
 		if(count($_POST)  > 0){
 			
@@ -237,10 +238,10 @@ class Uri_route_mcp {
 			
 			try {
 				
-				if(!$name) throw new Exception($this->EE->lang->line('error_setname'));
+				if(!$name) throw new Exception(ee()->lang->line('error_setname'));
 				
                 $insert['name'] = $name;
-				$insert['site_id'] = $this->EE->config->item('site_id');
+				$insert['site_id'] = ee()->config->item('site_id');
 			
                 if($replace_uri == 'y') $insert['replace_uri'] = 'y'; else $insert['replace_uri'] = 'n';
                 if($enable_rule == 'on') $insert['enable'] = 'on'; else $insert['enable'] = 'off';
@@ -259,8 +260,8 @@ class Uri_route_mcp {
                     $member_id_list = array();
 
                     foreach($username as $mbr){
-                        $query = $this->EE->db->get_where('exp_members', array('username' => trim($mbr)));
-                        if ($query->num_rows() != 1) throw new Exception($this->EE->lang->line('error_setuser'));
+                        $query = ee()->db->get_where('exp_members', array('username' => trim($mbr)));
+                        if ($query->num_rows() != 1) throw new Exception(ee()->lang->line('error_setuser'));
                         $row = $query->row();
                         if(!in_array($row->member_id, $member_id_list)) $member_id_list[]=$row->member_id;
                     }
@@ -314,18 +315,18 @@ class Uri_route_mcp {
 
                     error_reporting($old_error);
 
-                    $this->EE->db->update('exp_uri_route', $insert, array("id" => $rule_id));
+                    ee()->db->update('exp_uri_route', $insert, array("id" => $rule_id));
 
-                    $this->EE->session->set_flashdata('message_success', $this->EE->lang->line('succeful_update'));
+                    ee()->session->set_flashdata('message_success', ee()->lang->line('succeful_update'));
 
-                    $this->EE->functions->redirect($this->root_url);
+                    ee()->functions->redirect($this->root_url);
                 }
 
 				
 			} catch (Exception $e) {
 				
-				$this->EE->session->set_flashdata('message_failure', $e->getMessage());
-				$this->EE->functions->redirect($this->root_url.AMP.'method=edit'.AMP.'id='.$rule_id);
+				ee()->session->set_flashdata('message_failure', $e->getMessage());
+				ee()->functions->redirect($this->root_url.AMP.'method=edit'.AMP.'id='.$rule_id);
 			}			
 			
 			
@@ -338,7 +339,7 @@ class Uri_route_mcp {
     		
 		if($rule_row['group_id'] !==""){
 		
-			$query = $this->EE->db->get_where('exp_member_groups', array('site_id' => $this->EE->config->item('site_id'), 'group_id' => $rule_row['group_id']), 1);
+			$query = ee()->db->get_where('exp_member_groups', array('site_id' => ee()->config->item('site_id'), 'group_id' => $rule_row['group_id']), 1);
 			
               if($query->num_rows() > 0){
 
@@ -353,7 +354,7 @@ class Uri_route_mcp {
 				
 		$this->vars['rule'] = $rule_row;
 		
-		return $this->EE->load->view('edit', $this->vars, TRUE);
+		return ee()->load->view('edit', $this->vars, TRUE);
 	}
 
     function _get_member_list_from_string($string, $cover_link = false, $show_all = false){
@@ -368,7 +369,7 @@ class Uri_route_mcp {
         foreach($string as $mbr_id){
             $count++;
             $mbr_id = intval($mbr_id);
-            $query = $this->EE->db->get_where('exp_members', array('member_id' => $mbr_id), 1);
+            $query = ee()->db->get_where('exp_members', array('member_id' => $mbr_id), 1);
             
             if($query->num_rows() == 0) continue;
             
@@ -396,10 +397,10 @@ class Uri_route_mcp {
 
 	function _get_member_groups(){
 		
-		$this->EE->db->where('site_id', $this->EE->config->item('site_id'));
-		$this->EE->db->from('exp_member_groups');
+		ee()->db->where('site_id', ee()->config->item('site_id'));
+		ee()->db->from('exp_member_groups');
 	
-		$query = $this->EE->db->get();
+		$query = ee()->db->get();
 		
 		if ($query->num_rows() > 0)
 		{
@@ -414,15 +415,15 @@ class Uri_route_mcp {
 	
 	function get_memberlist(){
 		
-		$username = $this->EE->input->post('username', true);
+		$username = ee()->input->post('username', true);
 		
 		if($username == '') exit();
 	
-		$this->EE->db->like('username', $username, 'after'); 		
-		$this->EE->db->limit(10);
-		$this->EE->db->from('exp_members');
+		ee()->db->like('username', $username, 'after'); 		
+		ee()->db->limit(10);
+		ee()->db->from('exp_members');
 		
-		$query = $this->EE->db->get();
+		$query = ee()->db->get();
 			
 		echo "<table class='mainTable'>";
 
