@@ -43,11 +43,10 @@ $lang = array(
 'edit_rule'=>'Edit rule',
 'enable_rule'=>'Enable this rule',
 'use_redirect'=>'Use redirect',
-// END
 'use_redirect_descr'=>'Redirect to new url (<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10" target="_blank">info</a>)',
 'start_end_rule'=>'Start and End use rule',
 'redirect'=>'Redirect',
-''=>'',
-''=>'',
+'work_time'=>'Working time rule',
+'all_group'=>'All groups',
 ''=>'',
 );

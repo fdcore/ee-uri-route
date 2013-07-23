@@ -230,8 +230,8 @@
         <td>
             <input name="start_end_date" value="y" type="checkbox" id="start_end_date_checkbox">&nbsp;
             <span style="opacity:.4" id="start_end_date_input">
-            Start date: <input type="text" name="start_date" disabled placeholder="2013-08-07 12:34:56" style="width: 130px;" />
-            End date: <input type="text" name="end_date" disabled placeholder="2014-01-01 00:00:00" style="width: 130px;" />
+            Start: <input type="text" name="start_date" class="datepicker" disabled placeholder="2013-08-07 12:34:56" style="width: 130px;" />
+            End: <input type="text" name="end_date" class="datepicker" disabled placeholder="2014-01-01 00:00:00" style="width: 130px;" />
             now <strong><?php echo date('Y-m-d h:i:s'); ?></strong>
             </span>
         </td>
@@ -286,4 +286,22 @@
         $('#username').val(memberlist.join(', '));
         $('#member_list').text('');
     }
+
+    $(function() {
+        $( ".datepicker" ).datepicker({dateFormat: "yy-mm-dd "+getCurrentTime()});
+
+        function getCurrentTime() {
+            var CurrentTime = "";
+            try {
+                var CurrentDate = new Date();
+                var CurrentHours = CurrentDate.getHours();
+                var CurrentMinutes = CurrentDate.getMinutes();
+                var CurrentSeconds = CurrentDate.getSeconds();
+                CurrentTime = "" + CurrentHours + ":" + CurrentMinutes + ":" + CurrentSeconds + "";
+            }
+            catch (ex) {
+            }
+            return CurrentTime;
+        }
+    });
 </script>

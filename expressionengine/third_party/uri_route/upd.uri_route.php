@@ -7,12 +7,8 @@
 
 class Uri_route_upd{ 
 	
-	var $version        = '1.4';
+	var $version        = '1.5';
 	
-	function __construct() 
-    { 
-    }
-
 	function install(){
 		
 		$data = array(

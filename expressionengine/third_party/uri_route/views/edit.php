@@ -209,7 +209,7 @@ if(isset($message_failure)){
     </tr>
 
     <tr class="even">
-        <td><label for="redirect_checkbox">Use redirect</label><div class="subtext">Redirect to new url (<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10" target="_blank">info</a>)</div></td>
+        <td><label for="redirect_checkbox"><?=$this->lang->line('use_redirect')?></label><div class="subtext"><?=$this->lang->line('use_redirect_descr')?></div></td>
         <td>
             <input name="redirect" value="y" type="checkbox" <?php if($rule['redirect'] != "") echo "checked='checked'"; ?> id="redirect_checkbox" >&nbsp;
             <span <?php if($rule['redirect'] == "") echo "style=\"opacity:.4\""; ?> id="redirect_input">
@@ -224,12 +224,12 @@ if(isset($message_failure)){
     </tr>
 
     <tr class="odd">
-        <td><label for="start_end_date_checkbox">Start and End use rule</label></td>
+        <td><label for="start_end_date_checkbox"><?=$this->lang->line('start_end_rule')?></label></td>
         <td>
             <input name="start_end_date" value="y" type="checkbox" id="start_end_date_checkbox" <?php if($rule['end_date'] > 0) echo "checked='checked'"; ?> >&nbsp;
             <span <?php if($rule['end_date'] == 0) echo "style=\"opacity:.4\""; ?> id="start_end_date_input">
-            Start date: <input type="text" name="start_date" value="<?php if($rule['start_date'] > 0) echo date('Y-m-d h:i:s', $rule['start_date']); ?>" placeholder="2013-08-07 12:34:56" style="width: 130px;" />
-            End date: <input type="text" name="end_date" value="<?php if($rule['end_date'] > 0) echo date('Y-m-d h:i:s', $rule['end_date']); ?>" placeholder="2014-01-01 00:00:00" style="width: 130px;" />
+            Start: <input type="text" name="start_date" <?php if($rule['end_date'] == 0) echo "disabled='disabled'"; ?> class="datepicker" value="<?php if($rule['start_date'] > 0) echo date('Y-m-d h:i:s', $rule['start_date']); ?>" placeholder="2013-08-07 12:34:56" style="width: 130px;" />
+            End: <input type="text" name="end_date" <?php if($rule['end_date'] == 0) echo "disabled='disabled'"; ?> class="datepicker" value="<?php if($rule['end_date'] > 0) echo date('Y-m-d h:i:s', $rule['end_date']); ?>" placeholder="2014-01-01 00:00:00" style="width: 130px;" />
             now <strong><?php echo date('Y-m-d h:i:s'); ?></strong>
             </span>
         </td>
@@ -298,4 +298,21 @@ if(isset($message_failure)){
 		
 		
 	}
+    $(function() {
+        $( ".datepicker" ).datepicker({dateFormat: "yy-mm-dd "+getCurrentTime()});
+
+        function getCurrentTime() {
+            var CurrentTime = "";
+            try {
+                var CurrentDate = new Date();
+                var CurrentHours = CurrentDate.getHours();
+                var CurrentMinutes = CurrentDate.getMinutes();
+                var CurrentSeconds = CurrentDate.getSeconds();
+                CurrentTime = "" + CurrentHours + ":" + CurrentMinutes + ":" + CurrentSeconds + "";
+            }
+                catch (ex) {
+            }
+            return CurrentTime;
+        }
+    });
 </script>

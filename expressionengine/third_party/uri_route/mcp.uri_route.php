@@ -71,7 +71,11 @@ class Uri_route_mcp {
 		$this->_get_member_groups();
 
         ee()->cp->set_right_nav(array('rules_list'	=> $this->root_url));
-
+        ee()->cp->add_js_script(
+            array(
+                'ui'      => array('datepicker'),
+            )
+        );
 		/*
 			POST Fields
 		*/
@@ -132,10 +136,17 @@ class Uri_route_mcp {
                 }
 
                 if($start_end_date == 'y' && $end_date){
-                    if(!$start_date) $insert['start_date'] = @strtotime($start_date); else $insert['start_date'] = time();
+                    if($start_date) $insert['start_date'] = @strtotime($start_date); else $insert['start_date'] = time();
 
                     $insert['end_date'] = @strtotime($end_date);
 
+                    // protect for unlimited time
+                    if($insert['end_date'] < $insert['start_date']){
+                        $insert['start_date'] = 0;
+                        $insert['end_date'] = 0;
+
+                        ee()->session->set_flashdata('message_failure', '"Start and End use rule" is invalid');
+                    }
                 } else {
                     $insert['start_date'] = 0;
                     $insert['end_date'] = 0;
@@ -190,7 +201,11 @@ class Uri_route_mcp {
 	function edit(){
 		
 		ee()->view->cp_page_title = ee()->lang->line('edit_rule');
-
+        ee()->cp->add_js_script(
+            array(
+                'ui'      => array('datepicker'),
+            )
+        );
         ee()->cp->set_right_nav(array(
             'create_rule' => BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module='.$this->mod_name.AMP.'method=create',
             'rules_list'  => $this->root_url)
@@ -280,9 +295,18 @@ class Uri_route_mcp {
                 } else $insert['redirect'] = '';
 
                 if($start_end_date == 'y' && $end_date){
-                    if(!$start_date) $insert['start_date'] = @strtotime($start_date); else $insert['start_date'] = time();
+
+                    if($start_date) $insert['start_date'] = @strtotime($start_date); else $insert['start_date'] = time();
 
                     $insert['end_date'] = @strtotime($end_date);
+
+                    // protect for unlimited time
+                    if($insert['end_date'] < $insert['start_date']){
+                        $insert['start_date'] = 0;
+                        $insert['end_date'] = 0;
+
+                        ee()->session->set_flashdata('message_failure', '"Start and End use rule" is invalid');
+                    }
                 } else {
                     $insert['start_date'] = 0;
                     $insert['end_date'] = 0;

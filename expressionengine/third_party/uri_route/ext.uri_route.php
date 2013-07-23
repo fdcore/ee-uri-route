@@ -8,7 +8,7 @@
 class Uri_route_ext {
 
     var $name		    = '';
-    var $version 		= '1.4';
+    var $version 		= '1.5';
     var $description	= '';
     var $settings_exist	= 'n';
     var $docs_url		= 'http://fdcore.com/';
@@ -51,7 +51,6 @@ class Uri_route_ext {
 
     function switch_template($uri_string)
     {
-
         $params = explode('/', $uri_string);
         $new_uri_string = '';
         $result_rules = array();
@@ -61,7 +60,6 @@ class Uri_route_ext {
         if (isset($params[1])) $params['template'] = $params[1]; else $params['template'] = '';
 
         if ($uri_string != '' && $uri_string != '/') {
-
 
             $query = ee()->db->get_where('exp_uri_route', array('site_id' => ee()->config->item('site_id'), 'enable' => 'on'));
 
@@ -129,11 +127,16 @@ class Uri_route_ext {
 
                     if ($win_rule['replace_uri'] == 'y') {
                         ee()->uri->uri_string = $new_uri_string;
-                        if(isset($segs[0])) ee()->uri->segments[1] = $segs[0];
-                        if(isset($segs[1])) ee()->uri->segments[2] = $segs[1];
-                    }
 
-                    print ee()->config->item('template');
+                        if(count($segs) > 0){
+                            $segment_index = 1;
+
+                            foreach($segs as $s){
+                                ee()->uri->segments[$segment_index] = $s;
+                                $segment_index++;
+                            }
+                        }
+                    }
 
                     return $segs;
 
