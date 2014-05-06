@@ -8,7 +8,7 @@
 class Uri_route_ext {
 
     var $name		    = '';
-    var $version 		= '1.5';
+    var $version 		= '1.6';
     var $description	= '';
     var $settings_exist	= 'n';
     var $docs_url		= 'http://fdcore.com/';

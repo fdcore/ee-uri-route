@@ -7,16 +7,16 @@
 class Uri_route_mcp {
 
 	public $vars = array();
-	
+	private $site_id = 1;
+
 	function __construct()
 	{
-		$this->EE =& get_instance();
-
         $this->mod_name = 'uri_route';
         $this->root_url = BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module='.$this->mod_name;
 
 		ee()->cp->set_breadcrumb($this->root_url,ee()->lang->line('uri_route_module_name'));
 		
+		$this->site_id = ee()->config->item('site_id');
 	}
 
     function index(){

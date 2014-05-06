@@ -239,7 +239,7 @@ if(isset($message_failure)){
 	</tbody>
 </table>
 
-<input type="submit" value="<?=$this->lang->line('update')?>" class="submit" />
+<input type="submit" value="<?=$this->lang->line('update')?>" class="submit" /> &nbsp; <a href="<?php echo 'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=uri_route'.AMP.'method=delete'.AMP.'id='.$rule['id']; ?>"><?=$this->lang->line('delete')?></a>
 
 </form>
 
