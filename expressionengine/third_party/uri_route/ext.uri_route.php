@@ -77,8 +77,12 @@ class Uri_route_ext {
                         if(intval($rule['start_date']) > 0 && intval($rule['end_date']) > 0){
                             $start_date = intval($rule['start_date']);
                             $end_date   = intval($rule['end_date']);
-
-                            if(time() > $start_date) break;
+                            
+                            // echo date('Y.m.d H:i:s').'<br>';
+                            // echo date('Y.m.d H:i:s', $start_date).'<br>';
+                            // echo date('Y.m.d H:i:s', $end_date).'<br>';
+                            
+                            if(time() < $start_date) break;
                             if($end_date < time()) break;
                         }
 

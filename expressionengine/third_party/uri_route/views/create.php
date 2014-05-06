@@ -187,7 +187,9 @@
 	
 	<tr class="even">
 		<td><label for="template_rules"><em class="required">* </em><?=$this->lang->line('template_rules')?></label><div class="subtext"><?=$this->lang->line('template_rules_help')?></div></td>
-		<td><input type="text" name="template_rules" id="template_rules" value="<?=$this->input->post('template_rules')?>" placeholder="|news/page-([0-9]+)/([a-z0-9_-]+)|" /></td>
+		<td><input type="text" name="template_rules" id="template_rules" value="<?=$this->input->post('template_rules')?>" placeholder="|^u([0-9]+)|" />
+    		  <small>Example: <strong>|^u([0-9]+)|</strong> , <strong>|^about/([a-zA-Z0-9]+)|</strong></small>
+		</td>
 	</tr>
 	
 	
@@ -232,7 +234,7 @@
             <span style="opacity:.4" id="start_end_date_input">
             Start: <input type="text" name="start_date" class="datepicker" disabled placeholder="2013-08-07 12:34:56" style="width: 130px;" />
             End: <input type="text" name="end_date" class="datepicker" disabled placeholder="2014-01-01 00:00:00" style="width: 130px;" />
-            now <strong><?php echo date('Y-m-d h:i:s'); ?></strong>
+            now <strong><?php echo date('Y-m-d H:i:s'); ?></strong>
             </span>
         </td>
     </tr>

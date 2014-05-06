@@ -228,8 +228,8 @@ if(isset($message_failure)){
         <td>
             <input name="start_end_date" value="y" type="checkbox" id="start_end_date_checkbox" <?php if($rule['end_date'] > 0) echo "checked='checked'"; ?> >&nbsp;
             <span <?php if($rule['end_date'] == 0) echo "style=\"opacity:.4\""; ?> id="start_end_date_input">
-            Start: <input type="text" name="start_date" <?php if($rule['end_date'] == 0) echo "disabled='disabled'"; ?> class="datepicker" value="<?php if($rule['start_date'] > 0) echo date('Y-m-d h:i:s', $rule['start_date']); ?>" placeholder="2013-08-07 12:34:56" style="width: 130px;" />
-            End: <input type="text" name="end_date" <?php if($rule['end_date'] == 0) echo "disabled='disabled'"; ?> class="datepicker" value="<?php if($rule['end_date'] > 0) echo date('Y-m-d h:i:s', $rule['end_date']); ?>" placeholder="2014-01-01 00:00:00" style="width: 130px;" />
+            Start: <input type="text" name="start_date" <?php if($rule['end_date'] == 0) echo "disabled='disabled'"; ?> class="datepicker" value="<?php if($rule['start_date'] > 0) echo date('Y-m-d H:i:s', $rule['start_date']); ?>" placeholder="2013-08-07 12:34:56" style="width: 130px;" />
+            End: <input type="text" name="end_date" <?php if($rule['end_date'] == 0) echo "disabled='disabled'"; ?> class="datepicker" value="<?php if($rule['end_date'] > 0) echo date('Y-m-d H:i:s', $rule['end_date']); ?>" placeholder="2014-01-01 00:00:00" style="width: 130px;" />
             now <strong><?php echo date('Y-m-d h:i:s'); ?></strong>
             </span>
         </td>
