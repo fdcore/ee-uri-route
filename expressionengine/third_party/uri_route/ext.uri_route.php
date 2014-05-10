@@ -1,4 +1,15 @@
 <?php
+
+if (!function_exists('ee'))
+{
+    function ee()
+    {
+        public static $EE;
+        if (!$EE) { $EE = get_instance(); }
+        return $EE;
+    }
+}
+
 /*
  * URI Route for ExpressionEngine 2
  * @author Dmitriy <sealnetsoul@gmail.com>
